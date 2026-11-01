@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mismatchy – Spot the Difference</title>
+<meta name="description" content="Spot the differences solo or race your friends online. Join my room in Mismatchy!">
+<meta property="og:title" content="Race me in Mismatchy!">
+<meta property="og:description" content="Spot the differences faster than your friends. Free on iPhone and Android.">
+<meta property="og:image" content="https://melihozkas.github.io/mismatchy/icon.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root { --bg:#FFF4E8; --ink:#1F2330; --soft:#555E73; --coral:#FF6B4A; --lemon:#FFCD3A; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background: radial-gradient(circle at 20% 10%, #FFE4D6 0, transparent 45%), var(--bg);
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color:var(--ink); }
+  main { width:min(92vw,420px); text-align:center; padding:28px 22px 32px; }
+  .icon { width:104px; height:104px; border-radius:24px; box-shadow:0 10px 24px rgba(255,107,74,.35); }
+  h1 { font-size:30px; margin:16px 0 4px; }
+  p.sub { margin:0 0 20px; color:var(--soft); font-size:16px; line-height:1.4; }
+  .code { display:none; background:#fff; border-radius:22px; padding:16px; margin:0 0 20px; box-shadow:0 8px 20px rgba(0,0,0,.08); }
+  .code small { display:block; color:var(--soft); font-weight:700; margin-bottom:6px; }
+  .code b { display:block; font-size:42px; letter-spacing:8px; color:var(--coral); }
+  .code button { margin-top:10px; border:0; background:none; color:#6B4FD3; font-weight:800; font-size:15px; cursor:pointer; }
+  a.btn { display:block; padding:16px; margin:10px 0; border-radius:999px; text-decoration:none; font-weight:800; font-size:18px;
+          color:#fff; background:linear-gradient(135deg,#FFB13A,var(--coral)); box-shadow:0 8px 18px rgba(255,107,74,.35); }
+  a.btn.alt { background:#1F2330; box-shadow:0 8px 18px rgba(31,35,48,.25); }
+  .note { color:var(--soft); font-size:14px; margin-top:16px; min-height:20px; }
+</style>
+</head>
+<body>
+<main>
+  <img class="icon" src="icon.png" alt="Mismatchy">
+  <h1>Mismatchy</h1>
+  <p class="sub" id="sub"></p>
+  <div class="code" id="codeBox"><small id="codeLabel"></small><b id="code"></b><button id="copy" type="button"></button></div>
+  <a class="btn" id="ios" href="#">App Store</a>
+  <a class="btn alt" id="android" href="#">Google Play</a>
+  <p class="note" id="note"></p>
+</main>
+<script>
+(function () {
+  var IOS_URL = 'https://apps.apple.com/app/id6769523779?ct=invite';
+  var ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.find.difference.farkibul.farkibul&referrer=utm_source%3Dmismatchy%26utm_medium%3Dinvite';
+  var T = {
+    tr: { sub: 'İki resim arasındaki farkları bul ya da arkadaşlarınla online yarış.', label: 'ODA KODU', copy: 'Kodu kopyala', copied: 'Kopyalandı ✓',
+          go: 'Mağazaya gidiyorsun… Kurduktan sonra kodu VS bölümüne gir.', pick: 'Telefonuna uygun mağazayı seç.', lang: 'tr' },
+    en: { sub: 'Spot the differences solo or race your friends online.', label: 'ROOM CODE', copy: 'Copy code', copied: 'Copied ✓',
+          go: 'Taking you to the store… After installing, enter the code in the VS tab.', pick: 'Pick the store for your phone.', lang: 'en' }
+  };
+  var t = /^tr/i.test(navigator.language || '') ? T.tr : T.en;
+  document.documentElement.lang = t.lang;
+  document.getElementById('sub').textContent = t.sub;
+  var q = new URLSearchParams(location.search);
+  var code = (q.get('code') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  if (code) {
+    document.getElementById('codeBox').style.display = 'block';
+    document.getElementById('codeLabel').textContent = t.label;
+    document.getElementById('code').textContent = code;
+    var btn = document.getElementById('copy'); btn.textContent = t.copy;
+    btn.onclick = function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { btn.textContent = t.copied; });
+    };
+  }
+  document.getElementById('ios').href = IOS_URL;
+  document.getElementById('android').href = ANDROID_URL;
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  var note = document.getElementById('note');
+  if (isIOS || isAndroid) {
+    // Mobile: hide the other store's button and head to the right one after a moment (the code stays in the chat message too).
+    document.getElementById(isIOS ? 'android' : 'ios').style.display = 'none';
+    note.textContent = t.go;
+    setTimeout(function () { location.href = isIOS ? IOS_URL : ANDROID_URL; }, 2200);
+  } else {
+    note.textContent = t.pick;
+  }
+})();
+</script>
+</body>
+</html>
